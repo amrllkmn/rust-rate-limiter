@@ -10,12 +10,15 @@ async fn main() {
     // initialize tracing
     tracing_subscriber::fmt::init();
 
+    let limited_token_bucket = Router::new()
+        .route("/limited", get(service::limited))
+        .layer(axumMiddleware::from_fn(middleware::token_bucket));
+
     // build our application with a route
     let app = Router::new()
         .route("/", get(service::root))
         .route("/unlimited", get(service::unlimited))
-        .route("/limited", get(service::limited))
-        .layer(axumMiddleware::from_fn(middleware::token_bucket));
+        .merge(limited_token_bucket);
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
