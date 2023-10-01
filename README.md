@@ -10,3 +10,13 @@ This is my attempt at building an API rate limiter. This is part of the [Coding 
 ## Features
 
 - Two endpoints: `/limited` and `/unlimited`.
+
+## To run
+
+Assumption: You've installed Rust.
+
+Run:
+
+```sh
+cargo run
+```
