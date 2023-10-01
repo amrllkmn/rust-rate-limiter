@@ -10,6 +10,7 @@ async fn main() {
     // initialize tracing
     tracing_subscriber::fmt::init();
 
+    // create /limited route with the middleware
     let limited_token_bucket = Router::new()
         .route("/limited", get(service::limited))
         .layer(axumMiddleware::from_fn(middleware::token_bucket));
