@@ -1,4 +1,8 @@
-use axum::{routing::get, Router};
+use axum::{
+    middleware::{self as axumMiddleware},
+    routing::get,
+    Router,
+};
 use std::net::SocketAddr;
 
 #[tokio::main]
@@ -9,8 +13,9 @@ async fn main() {
     // build our application with a route
     let app = Router::new()
         .route("/", get(service::root))
+        .route("/unlimited", get(service::unlimited))
         .route("/limited", get(service::limited))
-        .route("/unlimited", get(service::unlimited));
+        .layer(axumMiddleware::from_fn(middleware::token_bucket));
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
@@ -24,4 +29,5 @@ async fn main() {
         .unwrap();
 }
 
+mod middleware;
 mod service;
