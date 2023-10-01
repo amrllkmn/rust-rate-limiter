@@ -1,5 +1,6 @@
 use axum::{http::StatusCode, Json};
 use serde::Serialize;
+
 pub async fn root() -> &'static str {
     "Hello, World!"
 }

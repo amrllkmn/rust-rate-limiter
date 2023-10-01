@@ -1,5 +1,6 @@
 use axum::{routing::get, Router};
 use std::net::SocketAddr;
+
 #[tokio::main]
 async fn main() {
     // initialize tracing
