@@ -6,7 +6,10 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     // build our application with a route
-    let app = Router::new().route("/", get(root));
+    let app = Router::new()
+        .route("/", get(service::root))
+        .route("/limited", get(service::limited))
+        .route("/unlimited", get(service::unlimited));
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
@@ -20,7 +23,4 @@ async fn main() {
         .unwrap();
 }
 
-// basic handler that responds with a static string
-async fn root() -> &'static str {
-    "Hello, World!"
-}
+mod service;
