@@ -5,6 +5,13 @@ use axum::{
 };
 use std::net::SocketAddr;
 
+/// We need a persistent state that:
+/// - Keeps track of the users
+/// - Adds new users to the state
+/// - Handles refreshing token at a specified rate
+/// Solution:
+/// - Offload the tracking to a struct
+
 #[tokio::main]
 async fn main() {
     // initialize tracing
@@ -35,3 +42,4 @@ async fn main() {
 
 mod middleware;
 mod service;
+mod users;
