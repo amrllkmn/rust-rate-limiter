@@ -1,9 +1,15 @@
 use axum::{
+    extract::State,
     middleware::{self as axumMiddleware},
     routing::get,
     Router,
 };
 use std::net::SocketAddr;
+
+#[derive(Clone)]
+pub struct AppState {
+    users: Vec<users::User>,
+}
 
 /// We need a persistent state that:
 /// - Keeps track of the users
@@ -17,16 +23,23 @@ async fn main() {
     // initialize tracing
     tracing_subscriber::fmt::init();
 
-    // create /limited route with the middleware
-    let limited_token_bucket = Router::new()
+    // create state
+    let state: AppState = AppState { users: vec![] };
+
+    // create /limited and /unlimited behind /api route with the middleware
+    let api = Router::new()
         .route("/limited", get(service::limited))
-        .layer(axumMiddleware::from_fn(middleware::token_bucket));
+        .layer(axumMiddleware::from_fn_with_state(
+            state.clone(),
+            middleware::token_bucket,
+        ))
+        .route("/unlimited", get(service::unlimited));
 
     // build our application with a route
     let app = Router::new()
         .route("/", get(service::root))
-        .route("/unlimited", get(service::unlimited))
-        .merge(limited_token_bucket);
+        .nest("/api", api)
+        .with_state(state);
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`

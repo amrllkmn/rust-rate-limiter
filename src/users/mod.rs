@@ -1,6 +1,8 @@
 use std::thread;
 use std::time::Duration;
-struct User {
+
+#[derive(Clone)]
+pub struct User {
     id: u32,
     bucket: u32,
 }
