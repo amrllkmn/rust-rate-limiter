@@ -4,12 +4,11 @@ use axum::{
     routing::get,
     Router,
 };
-use std::net::SocketAddr;
+use std::{net::SocketAddr, sync::Arc};
 
-#[derive(Clone)]
-pub struct AppState {
-    users: Vec<users::User>,
-}
+use tokio::sync::Mutex;
+
+type AppState = Arc<Mutex<Vec<users::User>>>;
 
 /// We need a persistent state that:
 /// - Keeps track of the users
@@ -24,7 +23,7 @@ async fn main() {
     tracing_subscriber::fmt::init();
 
     // create state
-    let state: AppState = AppState { users: vec![] };
+    let state: AppState = Arc::new(Mutex::new(Vec::new()));
 
     // create /limited and /unlimited behind /api route with the middleware
     let api = Router::new()
