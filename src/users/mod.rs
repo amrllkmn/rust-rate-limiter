@@ -1,9 +1,9 @@
 use std::thread;
 use std::time::Duration;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct User {
-    id: u32,
+    pub id: u32,
     bucket: u32,
 }
 
@@ -18,11 +18,17 @@ impl User {
                 // Sleep for one second
                 thread::sleep(Duration::from_secs(1));
                 self.bucket += 1
+            } else {
+                break;
             }
         }
     }
 
     pub fn consume(&mut self) {
         self.bucket -= 1
+    }
+
+    pub fn bucket_is_empty(&self) -> bool {
+        self.bucket < 1
     }
 }
