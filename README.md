@@ -20,3 +20,20 @@ Run:
 ```sh
 cargo run
 ```
+
+## Challenge 1: Token Bucket
+
+The algorithm for token bucket is (taken from the challenge website):
+
+- There is a ‘bucket’ that has capacity for N tokens. Usually this is a bucket per user or IP address.
+- Every time period a new token is added to the bucket, if the bucket is full the token is discarded.
+- When a request arrives and the bucket contains tokens, the request is handled and a token is removed from the bucket.
+- When a request arrives and the bucket is empty, the request is declined.
+
+The idea is to create a bucket (with capacity of 10 tokens) per IP address and increment it at a rate of 1 token per second.
+
+### How I implemented it?
+
+First I created two endpoints: `/api/limited` and `/api/unlimited`.
+Then, I created a struct to store the bucket and an id to identify each user per request.
+To implement the algorithm, I created a middleware layer for the `/api/limited`. This allowed me to isolate the logic of identifying and checking the user's token bucket from the business logic.
