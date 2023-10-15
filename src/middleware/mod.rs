@@ -26,18 +26,16 @@ pub async fn token_bucket<B>(
 
     println!("{:?}", users);
 
-    if let Some(user) = users.iter_mut().find(|user| user.id == user_id) {
-        if user.bucket_is_empty() {
+    if let Some(user) = users.iter().find(|user| user.id == user_id) {
+        if user.bucket_is_empty().await {
             return Err(StatusCode::TOO_MANY_REQUESTS);
+        } else {
+            user.consume().await;
         }
-        user.consume();
 
         println!("The user: {:?}", user);
     } else {
-        let mut user: User = User::new(user_id);
-
-        user.start();
-
+        let user: User = User::new(user_id).await;
         users.push(user);
     }
 
