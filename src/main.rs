@@ -1,5 +1,4 @@
 use axum::{
-    extract::State,
     middleware::{self as axumMiddleware},
     routing::get,
     Router,
