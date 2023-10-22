@@ -1,17 +1,17 @@
-use std::sync::Arc;
 use std::time::Duration;
+use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::Mutex;
 
 #[derive(Clone, Debug)]
 pub struct User {
-    pub id: u32,
+    pub addr: SocketAddr,
     bucket: Arc<Mutex<u32>>,
 }
 
 impl User {
-    pub async fn new(id: u32) -> User {
+    pub async fn new(addr: SocketAddr) -> User {
         let user = User {
-            id,
+            addr,
             bucket: Arc::new(Mutex::new(0)),
         };
         // Clone user for the task.
